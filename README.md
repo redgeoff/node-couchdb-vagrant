@@ -45,3 +45,12 @@ You can access the DB in a browser on the host machine:
 ## Notes
 
 - Files placed in `app` are ignored by this repo.
+
+
+## Recreate CouchDB Service
+
+WARNING: this will delete all of your existing CouchDB data.
+
+CouchDB can sometimes get into a corrupted state and in this case the easiest fix may be to start refresh:
+
+    $ sudo /vagrant/recreate-couchdb-service.sh
