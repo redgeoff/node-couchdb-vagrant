@@ -7,6 +7,7 @@ cd `dirname $0`
 docker service create --replicas 2 --name couchdb --network couchdb-network \
   --hostname="couchdb{{.Task.Slot}}" \
   --mount type=bind,source=/home/ubuntu/common,destination=/common \
+  --mount type=bind,source=/home/ubuntu/common/etc/local.ini,destination=/home/couchdb/couchdb/etc/local.d/local.ini \
   -e COUCHDB_COOKIE="mycookie" \
   -e COUCHDB_USER="admin" \
   -e COUCHDB_PASSWORD="admin" \
@@ -16,7 +17,6 @@ docker service create --replicas 2 --name couchdb --network couchdb-network \
   -e SERVICE_NAME="{{.Service.Name}}" \
   -e TASK_SLOT="{{.Task.Slot}}" \
   -e COUCHDB_DATA_DIR="/common/data/{{.Service.Name}}{{.Task.Slot}}" \
-  -e COUCHDB_LOCAL_INI="/common/etc/local.ini" \
   -p 5984:5984 \
   --detach=true \
   redgeoff/couchdb-service
