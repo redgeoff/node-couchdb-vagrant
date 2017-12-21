@@ -18,5 +18,8 @@ Vagrant.configure("2") do |config|
 
   # Bootstrap script for configuring VM
   config.vm.provision :shell, path: "bootstrap.sh"
+  
+  # Use nfs instead of the default folder sync as otherwise VirtualBox will crash periodically
+  config.vm.synced_folder ".", "/vagrant", type: "nfs"
 
 end
