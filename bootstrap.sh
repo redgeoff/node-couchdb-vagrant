@@ -6,6 +6,8 @@
 
 /vagrant/phantomjs.sh
 
+/vagrant/chrome.sh
+
 /vagrant/java.sh
 
 /vagrant/docker.sh
