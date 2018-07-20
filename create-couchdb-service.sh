@@ -7,7 +7,7 @@ cd `dirname $0`
 replicas=1
 
 # Create service
-docker service create --replicas 2 --name couchdb --network couchdb-network \
+docker service create --replicas $replicas --name couchdb --network couchdb-network \
   --hostname="couchdb{{.Task.Slot}}" \
   --mount type=bind,source=/home/ubuntu/common,destination=/common \
   --mount type=bind,source=/home/ubuntu/common/etc/local.ini,destination=/home/couchdb/couchdb/etc/local.d/local.ini \
