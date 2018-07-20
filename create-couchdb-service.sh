@@ -3,6 +3,9 @@
 # Change to script directory
 cd `dirname $0`
 
+# This value is set to 1 as otherwise you can experience race conditions when testing, e.g. when creating databases
+replicas=1
+
 # Create service
 docker service create --replicas 2 --name couchdb --network couchdb-network \
   --hostname="couchdb{{.Task.Slot}}" \
