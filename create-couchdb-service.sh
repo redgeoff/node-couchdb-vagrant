@@ -3,28 +3,26 @@
 # Change to script directory
 cd `dirname $0`
 
-# This value is set to 1 as otherwise you can experience race conditions when testing, e.g. when creating databases
-replicas=1
-
-# Create service
-docker service create --replicas $replicas --name couchdb --network couchdb-network \
-  --hostname="couchdb{{.Task.Slot}}" \
-  --mount type=bind,source=/home/ubuntu/common,destination=/common \
-  --mount type=bind,source=/home/ubuntu/common/etc/local.ini,destination=/home/couchdb/couchdb/etc/local.d/local.ini \
-  -e COUCHDB_COOKIE="mycookie" \
-  -e COUCHDB_USER="admin" \
-  -e COUCHDB_PASSWORD="admin" \
-  -e COUCHDB_HASHED_PASSWORD="-pbkdf2-b1eb7a68b0778a529c68d30749954e9e430417fb,4da0f8f1d98ce649a9c5a3845241ae24,10" \
-  -e COUCHDB_SECRET="mysecret" \
-  -e NODENAME="couchdb{{.Task.Slot}}" \
-  -e SERVICE_NAME="{{.Service.Name}}" \
-  -e TASK_SLOT="{{.Task.Slot}}" \
-  -e COUCHDB_DATA_DIR="/common/data/{{.Service.Name}}{{.Task.Slot}}" \
+sudo docker run -d --name couchdb \
+  --log-opt max-size=100m \
+  --restart always \
   -p 5984:5984 \
-  --detach=true \
-  redgeoff/couchdb-service
+  -p 5986:5986 \
+  -p 4369:4369 \
+  -p 9100-9200:9100-9200 \
+  -e COUCHDB_USER='admin' \
+  -e COUCHDB_PASSWORD='-pbkdf2-b1eb7a68b0778a529c68d30749954e9e430417fb,4da0f8f1d98ce649a9c5a3845241ae24,10' \
+  -v /home/ubuntu/common/etc/local.ini:/opt/couchdb/etc/default.d/10-docker-default.ini \
+  -v /home/ubuntu/common/data:/opt/couchdb/data \
+  couchdb
 
-# Give the DB a chance to start and set up the system DBs
+# Give the DB a chance to start
 ./wait-for-it.sh localhost:5984 -t 300
-echo 'sleeping to allow for DB to start and set up system DBs...'
-sleep 90
+
+# Wait for DB to be ready to create DBs
+sleep 5
+
+# Create system DBs
+curl -X PUT http://admin:admin@localhost:5984/_users
+curl -X PUT http://admin:admin@localhost:5984/_replicator
+curl -X PUT http://admin:admin@localhost:5984/_global_changes

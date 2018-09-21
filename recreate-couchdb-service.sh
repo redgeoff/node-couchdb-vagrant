@@ -6,7 +6,7 @@
 cd `dirname $0`
 
 # Destroy the existing service
-docker service rm couchdb
+docker rm --force couchdb
 
 # Destroy the existing data
 rm -rf /home/ubuntu/common/data/*
