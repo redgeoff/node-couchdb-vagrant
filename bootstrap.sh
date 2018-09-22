@@ -15,4 +15,4 @@
 /vagrant/couchdb.sh
 
 # Default to app dir
-echo "cd /vagrant/app" >> /home/ubuntu/.bashrc
+echo "cd /vagrant/app" >> /home/vagrant/.bashrc
