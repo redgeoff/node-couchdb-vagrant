@@ -20,7 +20,7 @@ sudo docker run -d --name couchdb \
 ./wait-for-it.sh localhost:5984 -t 300
 
 # Wait for DB to be ready to create DBs
-sleep 5
+sleep 20
 
 # Create system DBs
 curl -X PUT http://admin:admin@localhost:5984/_users
