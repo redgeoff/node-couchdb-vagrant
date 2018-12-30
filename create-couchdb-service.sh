@@ -3,6 +3,7 @@
 # Change to script directory
 cd `dirname $0`
 
+# TODO: use latest CouchDB after https://github.com/apache/couchdb/issues/1810 is fixed
 sudo docker run -d --name couchdb \
   --log-opt max-size=100m \
   --restart always \
@@ -14,7 +15,7 @@ sudo docker run -d --name couchdb \
   -e COUCHDB_PASSWORD='-pbkdf2-b1eb7a68b0778a529c68d30749954e9e430417fb,4da0f8f1d98ce649a9c5a3845241ae24,10' \
   -v /home/ubuntu/common/etc/local.ini:/opt/couchdb/etc/default.d/10-docker-default.ini \
   -v /home/ubuntu/common/data:/opt/couchdb/data \
-  couchdb
+  couchdb:2.2
 
 # Give the DB a chance to start
 ./wait-for-it.sh localhost:5984 -t 300
